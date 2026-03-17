@@ -2,9 +2,16 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Perfect Match</title>
     <link rel="stylesheet" href="style.css">
+
+<style>
+  /* iOS Safari — désactive zoom double-tap partout */
+  * { touch-action: manipulation; }
+  /* Empêche le zoom sur les inputs aussi */
+  input, button, select, textarea { font-size: 16px; }
+</style>
 </head>
 <body>
 
