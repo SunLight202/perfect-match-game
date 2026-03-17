@@ -736,18 +736,21 @@ body::after {
     font-size: 0.8em; font-weight: 600; color: var(--rose-light);
     min-height: 1.2em; letter-spacing: 0.05em;
 }
-.maze-dpad { position: relative; width: 110px; height: 110px; margin-top: 6px; flex-shrink: 0; }
+.maze-dpad { position: relative; width: 132px; height: 132px; margin-top: 6px; flex-shrink: 0; }
 .dpad-btn {
-    position: absolute; width: 36px; height: 36px;
+    position: absolute; width: 44px; height: 44px;
     background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18);
-    border-radius: 8px; color: rgba(255,255,255,0.7); font-size: 0.85em;
+    border-radius: 10px; color: rgba(255,255,255,0.7); font-size: 1em;
     cursor: pointer; display: flex; align-items: center; justify-content: center;
-    transition: background 0.1s, transform 0.1s;
-    -webkit-tap-highlight-color: transparent; user-select: none;
+    transition: background 0.12s, transform 0.1s;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    touch-action: manipulation;   /* ← désactive zoom double-tap iOS */
+    -webkit-touch-callout: none;  /* ← désactive menu long press iOS */
 }
 .dpad-btn:active { background: rgba(232,32,74,0.35); transform: scale(0.9); }
-.dpad-up { top: 0; left: 37px; } .dpad-down { bottom: 0; left: 37px; }
-.dpad-left { top: 37px; left: 0; } .dpad-right { top: 37px; right: 0; }
+.dpad-up { top: 0; left: 44px; } .dpad-down { bottom: 0; left: 44px; }
+.dpad-left { top: 44px; left: 0; } .dpad-right { top: 44px; right: 0; }
 .maze-quit {
     margin-top: 8px; flex-shrink: 0;
     background: none !important; border: 1px solid rgba(255,255,255,0.12) !important;
