@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfect Match</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="game-container">
+
+    <header id="game-header" class="hidden">
+        <div id="lives">❤️❤️❤️</div>
+        <button id="btn-carnet" onclick="ouvrirCarnet()">📔 Carnet IA</button>
+        </header>
+
+    <section id="start-screen" class="screen">
+        <h1>💖 Perfect Match</h1>
+        <p class="tagline">Trouvez la personne idéale parmi 5 candidats.<br>Posez les bonnes questions, démasquez le menteur.</p>
+        
+        <div class="criteria-box" id="dynamic-criteria">
+            <strong>🎯 Recherche du système en cours...</strong>
+        </div>
+
+        <button id="btn-start" class="btn-primary">Trouver mon Match ✨</button>
+    </section>
+
+    <section id="tutorial-screen" class="screen hidden">
+        <div class="tutorial-card">
+            <h2 id="tuto-title">💖 Bienvenue</h2>
+            <p id="tuto-text" class="tagline">Préparez-vous à entrer dans le café.</p>
+            
+            <div class="tuto-dots" id="tuto-dots">
+                <span class="active"></span><span></span><span></span>
+            </div>
+            
+            <button id="btn-next-tuto" class="btn-primary" onclick="etapeTutoSuivante()">Suivant</button>
+        </div>
+    </section>
+
+    <section id="selection-screen" class="screen hidden">
+        <h2>☕ Choisissez une table</h2>
+        <div id="cafe-floor">
+            <button class="btn-table" onclick="parlerA('Alex')">Alex</button>
+            <button class="btn-table" onclick="parlerA('Maxime')">Maxime</button>
+            <button class="btn-table" onclick="parlerA('Chloé')">Chloé</button>
+            <button class="btn-table" onclick="parlerA('Sam')">Sam</button>
+            <button class="btn-table" onclick="parlerA('Julien')">Julien</button>
+        </div>
+    </section>
+
+    <!-- MINI-JEU LABYRINTHE -->
+    <section id="minigame-screen" class="screen hidden">
+        <div class="maze-header">
+            <h2 class="maze-title">Esquive la foule !</h2>
+            <p class="maze-subtitle">
+                Flèches clavier ou swipe pour bouger.<br>
+                Atteins la table ☕ — évite les 🤵 et les 😏 !
+            </p>
+        </div>
+        <div class="maze-wrap">
+            <canvas id="maze-canvas" width="320" height="320"></canvas>
+            <div id="maze-status"></div>
+        </div>
+        <div class="maze-dpad" id="maze-dpad">
+            <button class="dpad-btn dpad-up"    onclick="dpadMove('up')">▲</button>
+            <button class="dpad-btn dpad-left"  onclick="dpadMove('left')">◀</button>
+            <button class="dpad-btn dpad-right" onclick="dpadMove('right')">▶</button>
+            <button class="dpad-btn dpad-down"  onclick="dpadMove('down')">▼</button>
+        </div>
+        <button class="btn-conf-cancel maze-quit" onclick="annulerMiniJeu()">↩ Abandonner</button>
+    </section>
+
+    <section id="dialogue-screen" class="screen hidden">
+        <div id="chat-header">
+            <div id="char-portrait" class="portrait-emoji">🙂</div>
+            <div style="flex: 1;">
+                <h2 id="char-name">Nom</h2>
+                <div class="char-subtitle" id="char-subtitle">En train de discuter…</div>
+                <div id="patience-container">
+                    <div id="patience-bar"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="chat-box"></div>
+        <div id="questions-container"></div>
+
+        <div id="decision-container">
+            <button class="btn-match" onclick="demanderConfirmationMatch()">💚 C'est mon Match !</button>
+            <button class="btn-nomatch" onclick="quitterLaTable()">🚶 Quitter la table</button>
+        </div>
+    </section>
+
+    <div id="confirm-modal" class="hidden">
+        <div class="modal-content">
+            <h3>⚠️ Es-tu vraiment sûr(e) ?</h3>
+            <p>Si ce n'est pas la bonne personne, tu perdras une vie. Cette décision est irréversible.</p>
+            <div class="modal-buttons">
+                <button class="btn-match" onclick="confirmerMatch()">💚 Oui, c'est lui/elle !</button>
+                <button class="btn-nomatch" onclick="annulerMatch()">↩ J'annule</button>
+            </div>
+        </div>
+    </div>
+
+    <section id="epilogue-screen" class="screen hidden">
+        <div class="end-icon">✨</div>
+        <h1 id="epilogue-title" style="font-family: 'Playfair Display', serif; color: var(--rose);">Un nouveau départ</h1>
+        <div style="background: white; padding: 20px; border-radius: 15px; border: 1px solid var(--rose-pale); margin-bottom: 20px; box-shadow: var(--shadow-sm);">
+            <p id="epilogue-text" style="color: var(--brown); line-height: 1.6; font-style: italic;">Texte de l'épilogue...</p>
+        </div>
+        <button class="btn-primary" onclick="location.reload()">🔄 Rejouer une nouvelle partie</button>
+    </section>
+
+    <section id="gameover-screen" class="screen hidden">
+        <div class="end-icon">💔</div>
+        <h1>GAME OVER</h1>
+        <p id="gameover-message">Tu as fait trop d'erreurs...</p>
+        <button class="btn-primary" onclick="location.reload()">🔄 Réessayer</button>
+    </section>
+
+    <div id="reward-modal" class="hidden">
+        <div class="modal-content" style="border-color: #2e7d32;">
+            <h3>🕵️ Menteur Démasqué !</h3>
+            <p>En échange de ton silence, je te révèle <strong id="indices-count">3</strong> secrets sur les autres.</p>
+            <div id="reward-list" style="margin-top: 12px;"></div>
+            <div id="reward-result">Choisis un profil à scanner…</div>
+            <button id="btn-close-reward" class="btn-primary hidden" onclick="fermerRecompense()" style="margin-top: 12px;">Retourner au café</button>
+        </div>
+    </div>
+
+    <div id="carnet-modal" class="hidden">
+        <div class="carnet-content">
+            <button id="btn-close-carnet" onclick="fermerCarnet()">✖</button>
+            <h2>🕵️ Mon Carnet</h2>
+            <p class="carnet-help">Clique pour noter tes déductions → ❓ ✅ ❌</p>
+            
+            <div id="carnet-alert" class="hidden" style="background: rgba(240,48,94,0.1); color: var(--rose); padding: 8px; border-radius: 8px; font-size: 0.8em; margin-bottom: 10px; border: 1px solid var(--rose); text-align: center; font-weight: bold;">
+                ⚠️ ALERTE IA : Contradiction détectée avec un secret piraté !
+            </div>
+
+            <div id="carnet-list"></div>
+        </div>
+    </div>
+
+    <div id="confrontation-modal" class="hidden">
+        <div class="confrontation-card">
+            <div class="confrontation-icon">🚨</div>
+            <h3 class="confrontation-title">OBJECTION !</h3>
+            <p class="confrontation-subtitle">Tu m'accuses de mentir ?<br>Très bien, détective… <strong>Sur quel sujet précis ?</strong></p>
+            <div class="confrontation-choices">
+                <button class="btn-confrontation photos" onclick="resoudreConfrontation('photos')">
+                    <span class="btn-conf-icon">📷</span>
+                    <span class="btn-conf-label">Les photos souvenirs</span>
+                    <span class="btn-conf-arrow">→</span>
+                </button>
+                <button class="btn-confrontation enfants" onclick="resoudreConfrontation('enfants')">
+                    <span class="btn-conf-icon">👶</span>
+                    <span class="btn-conf-label">Le désir d'enfants</span>
+                    <span class="btn-conf-arrow">→</span>
+                </button>
+                <button class="btn-confrontation defauts" onclick="resoudreConfrontation('defauts')">
+                    <span class="btn-conf-icon">❤️</span>
+                    <span class="btn-conf-label">L'acceptation des défauts</span>
+                    <span class="btn-conf-arrow">→</span>
+                </button>
+            </div>
+            <button class="btn-conf-cancel" onclick="annulerConfrontation()">↩ J'ai parlé trop vite… annuler</button>
+        </div>
+    </div>
+
+</div>
+
+<audio id="bg-music" loop><source src="musique.mp3" type="audio/mpeg"></audio>
+<audio id="bg-music-maze" loop><source src="musique-maze.mp3" type="audio/mpeg"></audio> 
+<audio id="sfx-tasse"><source src="tasse.mp3" type="audio/mpeg"></audio>
+<audio id="sfx-msg"><source src="message.mp3" type="audio/mpeg"></audio>
+
+<script src="script.js"></script>
+</body>
+</html>
